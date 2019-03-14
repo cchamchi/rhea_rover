@@ -2,7 +2,10 @@
 #include "src/rover_gps.h"
 
 void setupRoverGps(){
-  roverGPS.begin(115200);
+
+  // Causion!! When using a Software serial, 
+  // must use 9600 baud rate, cause a Software read speed is too late
+  roverGPS.begin(9600);
 }
 
 void loopRoverGps(){

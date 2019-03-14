@@ -222,21 +222,16 @@ bool RoverGpsNmea::_have_new_message()
 {
     if (_last_RMC_ms == 0 ||
         _last_GGA_ms == 0) {
-            Serial.println("_have_new_message0");
         return false;
     }
     
     uint32_t now = millis();
     if (now - _last_RMC_ms > 150 ||
         now - _last_GGA_ms > 150) {
-            Serial.println("_have_new_message1");
-            Serial.println(now - _last_RMC_ms);
-            Serial.println(now - _last_GGA_ms );
         return false;
     }
     if (_last_VTG_ms != 0 &&
         now - _last_VTG_ms > 150) {
-            Serial.println("_have_new_message2");
         return false;
     }
     // prevent these messages being used again
@@ -255,13 +250,12 @@ bool RoverGpsNmea::_term_complete()
     // handle the last term in a message
     if (_is_checksum_term) {
         uint8_t checksum = 16 * _from_hex(_term[0]) + _from_hex(_term[1]);
-        //if (checksum == _parity) {
-         if(1){   
+        if (checksum == _parity) {
+         //if(1){   
             if (_gps_data_good) {
                 uint32_t now = millis();
                 switch (_sentence_type) {
                 case _GPS_SENTENCE_RMC:
-                Serial.println("_GPS_SENTENCE_RMC");
                     _last_RMC_ms = now;
                     state.time             = _new_time;
                     state.date             = _new_date;
@@ -275,7 +269,6 @@ bool RoverGpsNmea::_term_complete()
                     
                     break;
                 case _GPS_SENTENCE_GGA:
-                   Serial.println("_GPS_SENTENCE_GGA");
                     _last_GGA_ms = now;
                     state.time          = _new_time;
                     state.date          = _new_date;
@@ -312,7 +305,6 @@ bool RoverGpsNmea::_term_complete()
                     }
                     break;
                 case _GPS_SENTENCE_VTG:
-                Serial.println("_GPS_SENTENCE_VTG");
                     _last_VTG_ms = now;
                     state.ground_speed  = _new_speed*0.01f;
                     state.ground_course = wrap_360(_new_course*0.01f);
@@ -353,7 +345,6 @@ bool RoverGpsNmea::_term_complete()
             _sentence_type = _GPS_SENTENCE_RMC;
         } else if (strcmp(term_type, "GGA") == 0) {
             _sentence_type = _GPS_SENTENCE_GGA;
-            Serial.println("_GGA");
         } else if (strcmp(term_type, "VTG") == 0) {
             _sentence_type = _GPS_SENTENCE_VTG;
             // VTG may not contain a data qualifier, presume the solution is good
