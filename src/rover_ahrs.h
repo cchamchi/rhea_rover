@@ -14,14 +14,56 @@
 
 #include "Arduino.h"
 
+struct AhrsInfo {
+  float roll;
+  float pitch;
+  float yaw;
+  float ax;
+  float ay;
+  float az;
+};
+struct GyroInfo {
+  float roll;
+  float pitch;
+  float yaw;
+};
+struct AcceleroInfo {
+  float ax;
+  float ay;
+  float az;
+};
+
 class RoverAhrs
 {
   public:
-    Morse(int pin);
-    void dot();
-    void dash();
+    void readAhrsData();
+    bool isAhrsDataReady();
+    void ahrsBegin();
+    void rx_empty();
+
+    float roll;
+    float pitch;
+    float yaw;
+    float ax;
+    float ay;
+    float az;
+    
+    void begin();
+    void update();
+    GyroInfo getGyro();
+    AcceleroInfo getAccelero();
+    float getMotionAcceleration();
+    void caculrateMotionAcceleration();
+
+    bool isAhrsDataNew();
+    void printAhrsInfo();
+
   private:
-    int _pin;
+    float _sbuf[6];
+
+    bool _ahrs_data_flag;
+    float _motion_acceleration;
+    int _print_count;
 };
 
 
