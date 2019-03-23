@@ -4,7 +4,7 @@
 * @license This project is released under the MIT License (MIT)
 * @copyright Copyright (c) 2019 Asgardia
 * @date Mar 2019
-* @brief ...
+* @brief ....
 */
 
 #ifndef RoverUltraSonic_h
@@ -15,11 +15,15 @@
 class RoverUltraSonic
 {
   public:
-    Morse(int pin);
-    unsigned long measureDistance();
-    bool isDistanceInArea(unsigned long distance_cm);
+    RoverUltraSonic(int trigPin, int echoPin);
+    unsigned long measureDistance()
+    bool isDistanceInArea(unsigned long distance_cm)
+    void PrintDistance();
   private:
-    int _pin;
+    int _trigPin;
+    int _echoPin;
+    
+    float distance;
 };
 
 
