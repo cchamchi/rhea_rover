@@ -14,7 +14,7 @@
 
 #include "Arduino.h"
 
-class RoverDhtedit
+class RoverDht
 {
   public:
     Morse(int pin);
