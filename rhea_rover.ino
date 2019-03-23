@@ -1,6 +1,6 @@
 
 #include "src/rover_gps.h"
-#include "src/rover_ultrasonic.h"
+#include "src/rover_RoverUltraSonic.h"
 #include "src/rover_dht.h"
 #include "src/rover_ahrs.h"
 void setup() {

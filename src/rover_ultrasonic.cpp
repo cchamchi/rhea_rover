@@ -7,8 +7,9 @@
 * @brief ...
 */
 
-#include "rover_ultrasonic.h"
+#include "RoverUltraSonic.h"
 
+#include "Arduino.h"
 RoverUltraSonic::RoverUltraSonic(int trigPin, int echoPin)
 {
   pinMode(trigPin, OUTPUT);
