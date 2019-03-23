@@ -9,24 +9,37 @@
 
 #include "rover_ultrasonic.h"
 
-RoverUltraSonic::Morse(int pin)
+RoverUltraSonic::RoverUltraSonic(int trigPin, int echoPin)
 {
-  pinMode(pin, OUTPUT);
-  _pin = pin;
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  _trigPin = trigPin;
+  _echoPin = echoPin;
 }
 
 unsigned long  RoverUltraSonic::measureDistance()
 {
-  digitalWrite(_pin, HIGH);
-  delay(250);
-  digitalWrite(_pin, LOW);
-  delay(250);  
+  digitalWrite(trigPin, LOW);
+  digitalWrite(echoPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+
+  unsigned long duration = pulseIn(echoPin, HIGH); 
+  // HIGH 였을 때 시간(초음파가 보냈다가 다시 들어온 시간)을 가지고 거리를 계산 한다.
+  distance = ((float)(340 * duration) / 10000) / 2;  
 }
 
 bool RoverUltraSonic::isDistanceInArea(unsigned long distance_cm)
 {
-  digitalWrite(_pin, HIGH);
-  delay(1000);
-  digitalWrite(_pin, LOW);
-  delay(250);
+  if(){
+    //not dangerous
+    return true;
+  }else{
+    //too close
+    return false;
+  }
+  //turn around
+  
+  
 }
