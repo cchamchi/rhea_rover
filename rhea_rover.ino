@@ -11,7 +11,7 @@ void setup() {
   Serial.println("Rover GPS test");
 
 }
-dsfasdfsadfsdf
+
 void loop() {
   loopRoverGps(); 
   //loopPassthru();

@@ -16,8 +16,8 @@ class RoverUltraSonic
 {
   public:
     Morse(int pin);
-    void dot();
-    void dash();
+    unsigned long measureDistance();
+    bool isDistanceInArea(unsigned long distance_cm);
   private:
     int _pin;
 };

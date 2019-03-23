@@ -15,7 +15,7 @@ RoverUltraSonic::Morse(int pin)
   _pin = pin;
 }
 
-void RoverUltraSonic::dot()
+unsigned long  RoverUltraSonic::measureDistance()
 {
   digitalWrite(_pin, HIGH);
   delay(250);
@@ -23,7 +23,7 @@ void RoverUltraSonic::dot()
   delay(250);  
 }
 
-void RoverUltraSonic::dash()
+bool RoverUltraSonic::isDistanceInArea(unsigned long distance_cm)
 {
   digitalWrite(_pin, HIGH);
   delay(1000);
