@@ -7,7 +7,7 @@
 * @brief ...
 */
 
-#include "RoverUltraSonic.h"
+#include "rover_ultrasonic.h"
 
 #include "Arduino.h"
 RoverUltraSonic::RoverUltraSonic(int trigPin, int echoPin)
