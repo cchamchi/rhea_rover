@@ -1,5 +1,5 @@
 
-#ifndef rover_dht.H
+#ifndef rover_dht_H
 #define rover_dht_H
 
 #if ARDUINO >= 100
