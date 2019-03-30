@@ -1,28 +1,28 @@
-#include "src/rover_ultrasonic.h"
-unsigned long distance_cm
 
-void setupUltraSonic(){
-    // pin mode setup
-  RoverUltraSonic sonicpin(13,12);
-    // etc..
+
+unsigned long distance_cm;
+RoverUltraSonic sonicpin(13,12); // (trig, echo)
+void setupUltraSonic(){ 
+
 }
+float distance;
 
-void loopUltraSonic(){  
-
+void loopUltraSonic(){ 
    //measure the distance
-  unsigned long measureDistance()
-  bool isDistanceInArea(distance_cm);
+  distance=sonicpin.measureDistance();
+  
+  sonicpin.isDistanceInArea(20,1);
    //is Distance in Area??
 
    // Do someting
 
-
 }
 
 void loopUltraSonicTest(){
-    // //measure the distance
-  void PrintDistance();
+  distance=sonicpin.measureDistance();
+    // //measure the distance);
+  Serial.println(distance);
     // print distance
-   
+  delay(500);
 
 }

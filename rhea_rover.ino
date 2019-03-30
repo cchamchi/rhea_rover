@@ -1,4 +1,4 @@
-
+  
 #include "src/rover_gps.h"
 #include "src/rover_ultrasonic.h"
 #include "src/rover_dht.h"
@@ -6,14 +6,15 @@
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  setupRoverGps();
+  //setupRoverGps();
 
   Serial.println("Rover GPS test");
 
 }
 
 void loop() {
-  loopRoverGps(); 
+ //loopRoverGps(); 
   //loopPassthru();
-
+  loopUltraSonic();
+  //loopUltraSonicTest();
 }
