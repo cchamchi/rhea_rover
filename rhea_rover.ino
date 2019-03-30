@@ -4,16 +4,15 @@
 #include "src/rover_dht.h"
 #include "src/rover_ahrs.h"
 void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(9600);
-  setupRoverGps();
-
-  Serial.println("Rover GPS test");
-
+  
+  Serial.begin(38400);     //MPU6050 default
+  //setupRoverGps();
+  setupRoverAhrs();
 }
 
 void loop() {
-  loopRoverGps(); 
+  loopRoverAhrs();
+  //loopRoverGps(); 
   //loopPassthru();
 
 }
