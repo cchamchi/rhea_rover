@@ -9,6 +9,16 @@
 
 #include "rover_ahrs.h"
 
+void RoverAhrs::ahrsBegin()
+{
+  // join I2C bus (I2Cdev library doesn't do this automatically)
+  #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+      Wire.begin();
+  #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
+      Fastwire::setup(400, true);
+  #endif
+}
+
 void RoverAhrs::begin()
 {
   ahrsBegin();
@@ -18,6 +28,15 @@ void RoverAhrs::update()
 {
   if(isAhrsDataReady()){
     readAhrsData();
+    caculrateMotionAcceleration();
+    _ahrs_data_flag=true;
+  }
+}
+
+void RoverAhrs::testupdate()
+{
+  if(isAhrsDataReady()){
+    testreadAhrsData();
     caculrateMotionAcceleration();
     _ahrs_data_flag=true;
   }
@@ -91,27 +110,30 @@ void RoverAhrs::printAhrsInfo()
 
 void RoverAhrs::readAhrsData()
 {
-  roll=_sbuf[0];
-  pitch=_sbuf[1];
-  yaw=_sbuf[2];
-  ax=_sbuf[3];
-  ay=_sbuf[4];
-  az=_sbuf[5];
+  // read raw accel/gyro measurements from device
+  accelgyro.getMotion6(&ax, &ay, &az, &roll, &pitch, &yaw);
 
 }
-/* 여기부분은 어떻게 해야되는지 모르겠어요 ㅠㅠ
+
+void RoverAhrs::testreadAhrsData()
+{
+  roll=10;
+  pitch=20;
+  yaw=30;
+  ax=40;
+  ay=50;
+  az=60;
+
+}
+
 bool RoverAhrs::isAhrsDataReady()
 {
   bool ready;
   ready;
 
-  if(cansatIMU.read(_sbuf,6)){
-
-    ready=true;
-  }else{
-    ready=false;
-  }
+  
+  ready=true;
+  
 
   return ready;
 }
-*/
