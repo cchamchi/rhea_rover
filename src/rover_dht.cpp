@@ -16,6 +16,7 @@ DHT::DHT(uint8_t pin, uint8_t type, uint8_t count) {
 void DHT::begin(uint8_t usec) {
   pinMode(_pin, INPUT_PULLUP);
    _lastreadtime = millis() - MIN_INTERVAL;
+  DEBUG_PRINT("DHT max clock cycles: "); DEBUG_PRINTLN(_maxcycles, DEC);
   pullTime = usec;
 }
 
@@ -35,8 +36,28 @@ float DHT::readTemperature(bool S, bool force) {
         f = convertCtoF(f);
       }
       break;
-    
+    case DHT12:
+      f = data[2];
+      f += (data[3] & 0x0f) * 0.1;
+      if (data[2] & 0x80) {
+        f *= -1;
       }
+      if(S) {
+        f = convertCtoF(f);
+      }
+      break;
+    case DHT22:
+    case DHT21:
+      f = ((word)(data[2] & 0x7F)) << 8 | data[3];
+      f *= 0.1;
+      if (data[2] & 0x80) {
+        f *= -1;
+      }
+      if(S) {
+        f = convertCtoF(f);
+      }
+      break;
+    }
   }
   return f;
 }
@@ -54,10 +75,15 @@ float DHT::readHumidity(bool force) {
   if (read(force)) {
     switch (_type) {
     case DHT11:
-
+    case DHT12:
       f = data[0] + data[1] * 0.1;
       break;
-     }
+    case DHT22:
+    case DHT21:
+      f = ((word)data[0]) << 8 | data[1];
+      f *= 0.1;
+      break;
+    }
   }
   return f;
 }
@@ -101,6 +127,8 @@ float DHT::computeHeatIndex(float temperature, float percentHumidity,
 }
 
 bool DHT::read(bool force) {
+  // Check if sensor was read less than two seconds ago and return early
+  // to use last reading.
   uint32_t currenttime = millis();
   if (!force && ((currenttime - _lastreadtime) < MIN_INTERVAL)) {
     return _lastresult; // return last correct measurement
@@ -114,7 +142,7 @@ bool DHT::read(bool force) {
     yield(); // Handle WiFi / reset software watchdog
 #endif
 
-
+  
   pinMode(_pin, INPUT_PULLUP);
   delay(1);
 
@@ -122,20 +150,94 @@ bool DHT::read(bool force) {
   pinMode(_pin, OUTPUT);
   digitalWrite(_pin, LOW);
   switch(_type) {
+    case DHT22:
+    case DHT21:
+      delayMicroseconds(1100); // data sheet says "at least 1ms"
+      break;
     case DHT11:
     default:
       delay(20); //data sheet says at least 18ms, 20ms just to be safe
       break;
   }
+
+  uint32_t cycles[80];
+  {
+    // End the start signal by setting data line high for 40 microseconds.
+    pinMode(_pin, INPUT_PULLUP);
+
+    // Delay a moment to let sensor pull data line low.
+    delayMicroseconds(pullTime);
+
+    
+    InterruptLock lock;
+
+    
+    if (expectPulse(LOW) == TIMEOUT) {
+      DEBUG_PRINTLN(F("DHT timeout waiting for start signal low pulse."));
+      _lastresult = false;
+      return _lastresult;
+    }
+    if (expectPulse(HIGH) == TIMEOUT) {
+      DEBUG_PRINTLN(F("DHT timeout waiting for start signal high pulse."));
+      _lastresult = false;
+      return _lastresult;
+    }
+
+    for (int i=0; i<80; i+=2) {
+      cycles[i]   = expectPulse(LOW);
+      cycles[i+1] = expectPulse(HIGH);
+    }
+  } // Timing critical code is now complete.
+
+  // Inspect pulses and determine which ones are 0 (high state cycle count < low
+  // state cycle count), or 1 (high state cycle count > low state cycle count).
+  for (int i=0; i<40; ++i) {
+    uint32_t lowCycles  = cycles[2*i];
+    uint32_t highCycles = cycles[2*i+1];
+    if ((lowCycles == TIMEOUT) || (highCycles == TIMEOUT)) {
+      DEBUG_PRINTLN(F("DHT timeout waiting for pulse."));
+      _lastresult = false;
+      return _lastresult;
+    }
+    data[i/8] <<= 1;
+    // Now compare the low and high cycle times to see if the bit is a 0 or 1.
+    if (highCycles > lowCycles) {
+      // High cycles are greater than 50us low cycle count, must be a 1.
+      data[i/8] |= 1;
+    }
+    // Else high cycles are less than (or equal to, a weird case) the 50us low
+    // cycle count so this must be a zero.  Nothing needs to be changed in the
+    // stored data.
+  }
+
+  DEBUG_PRINTLN(F("Received from DHT:"));
+  DEBUG_PRINT(data[0], HEX); DEBUG_PRINT(F(", "));
+  DEBUG_PRINT(data[1], HEX); DEBUG_PRINT(F(", "));
+  DEBUG_PRINT(data[2], HEX); DEBUG_PRINT(F(", "));
+  DEBUG_PRINT(data[3], HEX); DEBUG_PRINT(F(", "));
+  DEBUG_PRINT(data[4], HEX); DEBUG_PRINT(F(" =? "));
+  DEBUG_PRINTLN((data[0] + data[1] + data[2] + data[3]) & 0xFF, HEX);
+
+  // Check we read 40 bits and that the checksum matches.
+  if (data[4] == ((data[0] + data[1] + data[2] + data[3]) & 0xFF)) {
+    _lastresult = true;
+    return _lastresult;
+  }
+  else {
+    DEBUG_PRINTLN(F("DHT checksum failure!"));
+    _lastresult = false;
+    return _lastresult;
+  }
 }
- 
+
 uint32_t DHT::expectPulse(bool level) {
 #if (F_CPU > 16000000L)
   uint32_t count = 0;
 #else
   uint16_t count = 0; // To work fast enough on slower AVR boards
 #endif
-    #ifdef __AVR
+  
+  #ifdef __AVR
     uint8_t portState = level ? _bit : 0;
     while ((*portInputRegister(_port) & _bit) == portState) {
       if (count++ >= _maxcycles) {

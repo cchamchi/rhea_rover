@@ -1,4 +1,5 @@
-#ifndef rover_dht_H
+
+#ifndef rover_dht.H
 #define rover_dht_H
 
 #if ARDUINO >= 100
@@ -7,8 +8,24 @@
  #include "WProgram.h"
 #endif
 
-#define DHT11 11
 
+#define DEBUG_PRINTER Serial
+
+// Setup debug printing macros.
+#ifdef DHT_DEBUG
+  #define DEBUG_PRINT(...) { DEBUG_PRINTER.print(__VA_ARGS__); }
+  #define DEBUG_PRINTLN(...) { DEBUG_PRINTER.println(__VA_ARGS__); }
+#else
+  #define DEBUG_PRINT(...) {}
+  #define DEBUG_PRINTLN(...) {}
+#endif
+
+// Define types of sensors.
+#define DHT11 11
+#define DHT12 12
+#define DHT22 22
+#define DHT21 21
+#define AM2301 21
 
 
 class DHT {
@@ -27,7 +44,7 @@ class DHT {
   uint8_t data[5];
   uint8_t _pin, _type;
   #ifdef __AVR
-    uint8_t _bit, _port;
+  uint8_t _bit, _port;
   #endif
   uint32_t _lastreadtime, _maxcycles;
   bool _lastresult;
