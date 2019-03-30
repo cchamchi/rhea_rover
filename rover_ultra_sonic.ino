@@ -1,4 +1,4 @@
-void setupUltraSonic(){
+  void setupUltraSonic(){
     // pin mode settup
 
     // etc..
