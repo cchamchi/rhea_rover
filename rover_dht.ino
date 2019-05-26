@@ -1,10 +1,10 @@
-include "rover_dht.h"
+#include "src/rover_dht.h"
 
 #define DHTPIN 2   // Digital pin connected to the DHT sensor
 #define DHTTYPE DHT11   // DHT 11
 
 DHT dht(DHTPIN, DHTTYPE);
-
+/*
 void setup() {
   Serial.begin(9600);
   Serial.println(F("DHTxx test!"));
@@ -39,4 +39,4 @@ void loop() {
   Serial.print(F("°C "));
   Serial.print(hif);
   Serial.println(F("°F"));
-}
+}*/

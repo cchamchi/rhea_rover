@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-  void setupUltraSonic(){
-    // pin mode settup
-=======
->>>>>>> 4b313896c551b5a75984c1dfbd2c01ad00bae6e4
-
 
 unsigned long distance_cm;
 RoverUltraSonic sonicpin(13,12); // (trig, echo)
