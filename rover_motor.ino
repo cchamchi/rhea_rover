@@ -4,7 +4,7 @@ RoverLx16A<SoftwareSerial> roverLx16A(_Mport);
 
 void setupRoverMotor(){
 
-     roverLx16A.begin();
+  roverLx16A.begin();
 }
 
 void loopRoverMotor(){
@@ -13,5 +13,4 @@ void loopRoverMotor(){
 
 
 void RoverMotorTest(){
-  
-}
+  roverLx16A.LobotSerialServoMove(4,
