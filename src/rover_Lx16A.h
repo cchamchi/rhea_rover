@@ -65,15 +65,16 @@ class RoverLx16A{
             stream.begin(115200);
         }
         byte LobotCheckSum(byte buf[]);
-        void LobotSerialServoMove(T &SerialX, uint8_t id, int16_t position, uint16_t time);
-        void LobotSerialServoStopMove(T &SerialX, uint8_t id);
-        void LobotSerialServoSetID(T &SerialX, uint8_t oldID, uint8_t newID);
-        void LobotSerialServoSetMode(T &SerialX, uint8_t id, uint8_t Mode, int16_t Speed);
-        void LobotSerialServoLoad(T &SerialX, uint8_t id);
-        void LobotSerialServoUnload(T &SerialX, uint8_t id);
+        void Move(T &SerialX, uint8_t id, int16_t position, uint16_t time);
+        void StopMove(T &SerialX, uint8_t id);
+        void SetID(T &SerialX, uint8_t oldID, uint8_t newID);
+        int GetID(T &SerialX, uint8_t ID);
+        void SetMode(T &SerialX, uint8_t id, uint8_t Mode, int16_t Speed);
+        void Load(T &SerialX, uint8_t id);
+        void Unload(T &SerialX, uint8_t id);
         int LobotSerialServoReceiveHandle(T &SerialX, byte *ret);
-        int LobotSerialServoReadPosition(T &SerialX, uint8_t id);
-        int LobotSerialServoReadVin(T &SerialX, uint8_t id);
+        int ReadPosition(T &SerialX, uint8_t id);
+        int ReadVin(T &SerialX, uint8_t id);
     private:
         T& stream;
 

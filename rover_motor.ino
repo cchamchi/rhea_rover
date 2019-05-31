@@ -13,4 +13,6 @@ void loopRoverMotor(){
 
 
 void RoverMotorTest(){
-  roverLx16A.LobotSerialServoMove(4,
+
+}
+  
