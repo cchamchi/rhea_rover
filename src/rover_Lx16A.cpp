@@ -10,8 +10,7 @@
 #include <SoftwareSerial.h>
 #include "rover_Lx16A.h"
 
-template <class T>
-byte RoverLx16A<T>::LobotCheckSum(byte buf[]){
+byte RoverLx16A::LobotCheckSum(byte buf[]){
     byte i;
     uint16_t temp = 0;
     for (i = 2; i < buf[3] + 2; i++) {
@@ -21,8 +20,8 @@ byte RoverLx16A<T>::LobotCheckSum(byte buf[]){
     i = (byte)temp;
     return i;
 }
-template <class T>
-void RoverLx16A<T>::Move(T &SerialX, uint8_t id, int16_t position, uint16_t time){
+
+void RoverLx16A::Move(uint8_t id, int16_t position, uint16_t time){
     byte buf[10];
     if(position < 0)
         position = 0;
@@ -37,20 +36,19 @@ void RoverLx16A<T>::Move(T &SerialX, uint8_t id, int16_t position, uint16_t time
     buf[7] = GET_LOW_BYTE(time);
     buf[8] = GET_HIGH_BYTE(time);
     buf[9] = LobotCheckSum(buf);
-    SerialX.write(buf, 10);
+    SerialX->write(buf, 10);
 }
-template <class T>
-void RoverLx16A<T>::StopMove(T &SerialX, uint8_t id){
+
+void RoverLx16A::StopMove(uint8_t id){
     byte buf[6];
     buf[0] = buf[1] = LOBOT_SERVO_FRAME_HEADER;
     buf[2] = id;
     buf[3] = 3;
     buf[4] = LOBOT_SERVO_MOVE_STOP;
     buf[5] = LobotCheckSum(buf);
-    SerialX.write(buf, 6);
+    SerialX->write(buf, 6);
 }
-template <class T>
-void RoverLx16A<T>::SetID(T &SerialX, uint8_t oldID, uint8_t newID){
+void RoverLx16A::SetID(uint8_t oldID, uint8_t newID){
     byte buf[7];
     buf[0] = buf[1] = LOBOT_SERVO_FRAME_HEADER;
     buf[2] = oldID;
@@ -58,7 +56,7 @@ void RoverLx16A<T>::SetID(T &SerialX, uint8_t oldID, uint8_t newID){
     buf[4] = LOBOT_SERVO_ID_WRITE;
     buf[5] = newID;
     buf[6] = LobotCheckSum(buf);
-    SerialX.write(buf, 7);
+    SerialX->write(buf, 7);
     
     #ifdef LOBOT_DEBUG
     Serial.println("LOBOT SERVO ID WRITE");
@@ -71,8 +69,8 @@ void RoverLx16A<T>::SetID(T &SerialX, uint8_t oldID, uint8_t newID){
     Serial.println(" ");
     #endif
 }
-template <class T>
-int RoverLx16A<T>::GetID(T &SerialX, uint8_t ID){
+
+int RoverLx16A::GetID(uint8_t ID){
     int count = 10000;
     int ret;
     byte buf[7];
@@ -81,7 +79,7 @@ int RoverLx16A<T>::GetID(T &SerialX, uint8_t ID){
     buf[3] = 3;
     buf[4] = LOBOT_SERVO_ID_READ;
     buf[5] = LobotCheckSum(buf);
-    //SerialX.write(buf, 6);
+    
     
     #ifdef LOBOT_DEBUG
     Serial.println("LOBOT SERVO ID READ");
@@ -93,18 +91,18 @@ int RoverLx16A<T>::GetID(T &SerialX, uint8_t ID){
     }
     Serial.println(" ");
     #endif
-    while (SerialX.available())
-        SerialX.read();
+    while (SerialX->available())
+        SerialX->read();
 
-    SerialX.write(buf, 6);
+    SerialX->write(buf, 6);
 
-    while (!SerialX.available()) {
+    while (!SerialX->available()) {
         count -= 1;
         if (count < 0)
         return -1;
     }
 
-    if (LobotSerialServoReceiveHandle(SerialX, buf) > 0)
+    if (LobotSerialServoReceiveHandle(buf) > 0)
         ret = BYTE_TO_HW(buf[2], buf[1]);
     else
         ret = -1;
@@ -115,8 +113,7 @@ int RoverLx16A<T>::GetID(T &SerialX, uint8_t ID){
     return ret;    
 }
 
-template <class T>
-void RoverLx16A<T>::SetMode(T &SerialX, uint8_t id, uint8_t Mode, int16_t Speed){
+void RoverLx16A::SetMode(uint8_t id, uint8_t Mode, int16_t Speed){
     byte buf[10];
 
     buf[0] = buf[1] = LOBOT_SERVO_FRAME_HEADER;
@@ -140,10 +137,10 @@ void RoverLx16A<T>::SetMode(T &SerialX, uint8_t id, uint8_t Mode, int16_t Speed)
     Serial.println(" ");
     #endif
 
-    SerialX.write(buf, 10);
+    SerialX->write(buf, 10);
 }
-template <class T>
-void RoverLx16A<T>::Load(T &SerialX, uint8_t id){
+
+void RoverLx16A::Load(uint8_t id){
     byte buf[7];
     buf[0] = buf[1] = LOBOT_SERVO_FRAME_HEADER;
     buf[2] = id;
@@ -152,7 +149,7 @@ void RoverLx16A<T>::Load(T &SerialX, uint8_t id){
     buf[5] = 1;
     buf[6] = LobotCheckSum(buf);
     
-    SerialX.write(buf, 7);
+    SerialX->write(buf, 7);
     
     #ifdef LOBOT_DEBUG
     Serial.println("LOBOT SERVO LOAD WRITE");
@@ -165,8 +162,8 @@ void RoverLx16A<T>::Load(T &SerialX, uint8_t id){
     Serial.println(" ");
     #endif
 }
-template <class T>
-void RoverLx16A<T>::Unload(T &SerialX, uint8_t id){
+
+void RoverLx16A::Unload(uint8_t id){
     byte buf[7];
     buf[0] = buf[1] = LOBOT_SERVO_FRAME_HEADER;
     buf[2] = id;
@@ -175,7 +172,7 @@ void RoverLx16A<T>::Unload(T &SerialX, uint8_t id){
     buf[5] = 0;
     buf[6] = LobotCheckSum(buf);
     
-    SerialX.write(buf, 7);
+    SerialX->write(buf, 7);
     
     #ifdef LOBOT_DEBUG
     Serial.println("LOBOT SERVO LOAD WRITE");
@@ -188,8 +185,8 @@ void RoverLx16A<T>::Unload(T &SerialX, uint8_t id){
     Serial.println(" ");
     #endif
 }
-template <class T>
-int RoverLx16A<T>::LobotSerialServoReceiveHandle(T &SerialX, byte *ret){
+
+int RoverLx16A::LobotSerialServoReceiveHandle(byte *ret){
     bool frameStarted = false;
     bool receiveFinished = false;
     byte frameCount = 0;
@@ -199,8 +196,8 @@ int RoverLx16A<T>::LobotSerialServoReceiveHandle(T &SerialX, byte *ret){
     byte recvBuf[32];
     byte i;
 
-    while (SerialX.available()) {
-        rxBuf = SerialX.read();
+    while (SerialX->available()) {
+        rxBuf = SerialX->read();
         delayMicroseconds(100);
         if (!frameStarted) {
         if (rxBuf == LOBOT_SERVO_FRAME_HEADER) {
@@ -255,8 +252,8 @@ int RoverLx16A<T>::LobotSerialServoReceiveHandle(T &SerialX, byte *ret){
     }
 
 }
-template <class T>
-int RoverLx16A<T>::ReadPosition(T &SerialX, uint8_t id){
+
+int RoverLx16A::ReadPosition(uint8_t id){
     int count = 10000;
     int ret;
     byte buf[6];
@@ -278,18 +275,18 @@ int RoverLx16A<T>::ReadPosition(T &SerialX, uint8_t id){
     Serial.println(" ");
     #endif
 
-    while (SerialX.available())
-        SerialX.read();
+    while (SerialX->available())
+        SerialX->read();
 
-    SerialX.write(buf, 6);
+    SerialX->write(buf, 6);
 
-    while (!SerialX.available()) {
+    while (!SerialX->available()) {
         count -= 1;
         if (count < 0)
         return -1;
     }
 
-    if (LobotSerialServoReceiveHandle(SerialX, buf) > 0)
+    if (LobotSerialServoReceiveHandle(buf) > 0)
         ret = BYTE_TO_HW(buf[2], buf[1]);
     else
         ret = -1;
@@ -299,8 +296,8 @@ int RoverLx16A<T>::ReadPosition(T &SerialX, uint8_t id){
     #endif
     return ret;
 }
-template <class T>
-int RoverLx16A<T>::ReadVin(T &SerialX, uint8_t id){
+
+int RoverLx16A::ReadVin(uint8_t id){
     int count = 10000;
     int ret;
     byte buf[6];
@@ -322,18 +319,18 @@ int RoverLx16A<T>::ReadVin(T &SerialX, uint8_t id){
     Serial.println(" ");
     #endif
 
-    while (SerialX.available())
-        SerialX.read();
+    while (SerialX->available())
+        SerialX->read();
 
-    SerialX.write(buf, 6);
+    SerialX->write(buf, 6);
 
-    while (!SerialX.available()) {
+    while (!SerialX->available()) {
         count -= 1;
         if (count < 0)
         return -2048;
     }
 
-    if (LobotSerialServoReceiveHandle(SerialX, buf) > 0)
+    if (LobotSerialServoReceiveHandle(buf) > 0)
         ret = (int16_t)BYTE_TO_HW(buf[2], buf[1]);
     else
         ret = -2048;

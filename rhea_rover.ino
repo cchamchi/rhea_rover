@@ -4,6 +4,7 @@
 #include "src/rover_dht.h"
 #include "src/rover_ahrs.h"
 #include "src/rover_Lx16A.h"
+#include "src/rover_motor.h"
 
 
 void setup() {
@@ -26,8 +27,13 @@ void loop() {
   //setupRoverGps();
   //loopUltraSonicTest();
   RoverMotorTest();
+  //Serial.println("dd");
+  delay(1000);
+  
   //Serial.println("Rover GPS test");
 
-
+//      if (Serial.available()) {
+//        Serial.write(Serial.read());
+//      }
 
 }

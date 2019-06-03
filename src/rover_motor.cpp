@@ -9,25 +9,44 @@
 #include <arduino.h>
 #include "rover_motor.h"
 
+
 #define R_MIN 20.0 //inch
 #define R_MAX 250.0
 
 #define V_MIN -100
 #define V_MAX 100
 
-RoverMotor::RoverMotor(){
+#define FRTWHEEL_LEFT_ID 1
+#define MIDWHEEL_LEFT_ID 2
+#define RERWHEEL_LEFT_ID 3
+#define FRTWHEEL_RIGHT_ID 4
+#define MIDWHEEL_RIGHT_ID 5
+#define RERWHEEL_RIGHT_ID 6
 
-    float currunt_radius=0;
+#define FRTSTEER_LEFT_ID 11
+#define RERSTEER_LEFT_ID 22
+#define FRTSTEER_RIGHT_ID 33
+#define RERSTEER_RIGHT_ID 44
 
-    memset( corner_degree, 0, sizeof(corner_degree));
-    memset( velocity_wheel, 0, sizeof(velocity_wheel));
+//RoverMotor::RoverMotor(SoftwareSerial& port):RoverLx16A(port){
+// RoverMotor::RoverMotor(SoftwareSerial& port):RoverLx16A<SoftwareSerial>(port){
+//     float currunt_radius=0;
 
-}
+
+//     memset( corner_degree, 0, sizeof(corner_degree));
+//     memset( velocity_wheel, 0, sizeof(velocity_wheel));
+
+// }
 
 
 void RoverMotor::getCornerDegree(float *corner_degree){
     //get degree of each corner
 
+    corner_degree[0]= ReadPosition(FRTSTEER_LEFT_ID);
+    corner_degree[1]= ReadPosition(RERSTEER_LEFT_ID);
+    corner_degree[3]= ReadPosition(FRTSTEER_RIGHT_ID);
+    corner_degree[1]= ReadPosition(RERSTEER_RIGHT_ID);
+    
 }
 float RoverMotor::approxTurningRadius(float *corner_degree){
     //calculate a approxmate radius of rover using coner's degree
@@ -50,17 +69,31 @@ float RoverMotor::approxTurningRadius(float *corner_degree){
 		// 	return radius
 		// except:
 		// 	return 250
+    float r1,r2,r3,r4,radius;
+    r1 = d3/tan(radians(abs(corner_degree[0]))) - d1;
+    r2 = d2/tan(radians(abs(corner_degree[1]))) - d1;
+    r3 = d3/tan(radians(abs(corner_degree[2]))) + d1;
+    r4 = d2/tan(radians(abs(corner_degree[1]))) + d1;
+    radius = (r1 + r2 + r3 + r4)/4;
+    //range limit
+    if(radius<R_MIN)radius=R_MIN;
+    if(radius>R_MAX)radius=R_MAX;
+
+    if(corner_degree[0]>0){  //turn right
+      radius = radius;
+    }else{ //turn left
+      radius = -radius;
+    }
+    return radius;
 }
 void RoverMotor::calculateVelocity(int vel_joy,float radius,float *velocity_wheel){
 
 		// Returns a list of speeds for each individual drive motor based on current turning radius
-		// :param int v: Drive speed command range from -100 to 100
-		// :param int r: Turning radius command range from -100 to 100
-		// '''
+		// :param int vel_joy: Drive speed command range from -100 to 100
+		// :param float radius: curruent radius  range from -R_MAX to R_MAX
+    // :velocity_wheel : each velocity range from -100 to 100 
 
-  // transform rover value (-100~100) to real rover veloc,angle
-	float velco_rover=map(vel_joy,-100,100,V_MIN,V_MAX); 
-	float radius_rover=map(abs(radius),0,100,R_MAX,R_MIN);
+
 
   //Drive speed command velco_rover range from V_MIN to V_MAX
 
@@ -69,19 +102,20 @@ void RoverMotor::calculateVelocity(int vel_joy,float radius,float *velocity_whee
   	}else{
       // TO-DO : calculate velocity of each wheel
       
-      float x = velco_rover/((abs(radius_rover) + d4));                 
+      float x = (float)vel_joy/((abs(radius) + d4));                 
       float a = pow(d2,2);
       float b = pow(d3,2);
-      float c = pow((abs(radius_rover)+d1),2);
-      float d = pow((abs(radius_rover)-d1),2);
+      float c = pow((abs(radius)+d1),2);
+      float d = pow((abs(radius)-d1),2);
       float e = abs(radius)-d4;
 
       float v1 = x*sqrt(b + c);
-      float v2 = velco_rover;       // Fastest wheel
+      float v2 = (float)vel_joy;       // Fastest wheel
       float v3 = x*sqrt(a + c);
       float v4 = x*sqrt(b + d);
       float v5 = x*e;           // Slowest wheel      
       float v6 = x*sqrt(a + d);
+
 
       
       if (radius > 0){

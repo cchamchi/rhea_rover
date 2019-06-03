@@ -111,9 +111,6 @@ class RoverGPS
 
 
 
-SoftwareSerial _GPSport(10,11);
-
-RoverGPS<SoftwareSerial> roverGPS(_GPSport);
 
 
 

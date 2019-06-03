@@ -52,31 +52,38 @@
 
 
 
-template <class T>
+
 class RoverLx16A{
     public:
-        RoverLx16A(T& stream)
-            : stream(stream)
+        RoverLx16A()
+            : SerialX(NULL),conn(0)
         {}
-        void begin(uint32_t baud) {
-            stream.begin(baud);
+
+        void beginLx16(Stream& s) {
+            SerialX= &s;
         }
-        void begin() {
-            stream.begin(115200);
-        }
+        bool connect() {
+            SerialX->flush();
+            return conn = true;
+        }        
+        void disconnect() { conn = false; }    
+        bool connected() { return conn; }
+        int available() { return SerialX->available(); }           
         byte LobotCheckSum(byte buf[]);
-        void Move(T &SerialX, uint8_t id, int16_t position, uint16_t time);
-        void StopMove(T &SerialX, uint8_t id);
-        void SetID(T &SerialX, uint8_t oldID, uint8_t newID);
-        int GetID(T &SerialX, uint8_t ID);
-        void SetMode(T &SerialX, uint8_t id, uint8_t Mode, int16_t Speed);
-        void Load(T &SerialX, uint8_t id);
-        void Unload(T &SerialX, uint8_t id);
-        int LobotSerialServoReceiveHandle(T &SerialX, byte *ret);
-        int ReadPosition(T &SerialX, uint8_t id);
-        int ReadVin(T &SerialX, uint8_t id);
+        void Move(uint8_t id, int16_t position, uint16_t time);
+        void StopMove(uint8_t id);
+        void SetID(uint8_t oldID, uint8_t newID);
+        int GetID(uint8_t ID);
+        
+        void SetMode(uint8_t id, uint8_t Mode, int16_t Speed);
+        void Load(uint8_t id);
+        void Unload(uint8_t id);
+        int LobotSerialServoReceiveHandle(byte *ret);
+        int ReadPosition(uint8_t id);
+        int ReadVin(uint8_t id);
     private:
-        T& stream;
+        Stream* SerialX;
+        bool    conn;
 
 };
 
