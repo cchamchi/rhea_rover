@@ -28,15 +28,19 @@
 #define FRTSTEER_RIGHT_ID 33
 #define RERSTEER_RIGHT_ID 44
 
-//RoverMotor::RoverMotor(SoftwareSerial& port):RoverLx16A(port){
-// RoverMotor::RoverMotor(SoftwareSerial& port):RoverLx16A<SoftwareSerial>(port){
-//     float currunt_radius=0;
-
-
-//     memset( corner_degree, 0, sizeof(corner_degree));
-//     memset( velocity_wheel, 0, sizeof(velocity_wheel));
-
-// }
+/****    ID descriptions **************/
+//
+//      ID1,ID11 |-d1-|       ID4,ID33
+//                    |
+//                    d3   
+//                    |
+//      ID2 |---d4----|*      ID5    
+//                    | 
+//                    d2
+//                    |
+//      ID3,ID22      |       ID6,ID44
+//
+/**************************************/
 
 
 void RoverMotor::getCornerDegree(float *corner_degree){
