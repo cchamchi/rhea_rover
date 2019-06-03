@@ -6,6 +6,12 @@
 #include "src/rover_Lx16A.h"
 #include "src/rover_motor.h"
 
+/* software serial pin map */
+// GPS : 10,11
+// BLE : 4,5
+// Lx16A : 6,7
+
+int joy_velocity=0,joy_raduis=0;
 
 void setup() {
 

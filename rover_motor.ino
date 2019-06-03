@@ -1,4 +1,4 @@
-SoftwareSerial _Mport(5,6);
+SoftwareSerial _Mport(6,7);
 RoverMotor myRover(_Mport);
 
 void setupRoverMotor(){
@@ -19,7 +19,7 @@ void RoverMotorTest(){
 
 }
 
-void sendcommand(float v,float r){
+void sendcommand(int v,int r){
 
   float cornerDeg[4];
   //myRover.getCornerDegree(cornerDeg);
