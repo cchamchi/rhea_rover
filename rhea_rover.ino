@@ -19,21 +19,21 @@ void setup() {
   Serial.begin(9600);
   //setupRoverGps();
   //setupRoverAhrs();
-   setupRoverMotor();
-
+   //setupRoverMotor();
+  setupJoystick();
 }
 
 void loop() {
   //loopRoverAhrs();
   //loopRoverGps(); 
-
+   loopJoystick();
   // put your setup code here, to run once:
   
   //setupRoverGps();
   //loopUltraSonicTest();
-  RoverMotorTest();
+  //RoverMotorTest();
   //Serial.println("dd");
-  delay(1000);
+  
   
   //Serial.println("Rover GPS test");
 
