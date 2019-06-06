@@ -1,4 +1,3 @@
-  
 #include "src/rover_gps.h"
 #include "src/rover_ultrasonic.h"
 #include "src/rover_dht.h"
