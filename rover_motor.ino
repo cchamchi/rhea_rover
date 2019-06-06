@@ -27,4 +27,3 @@ void sendcommand(int v,int r){
  // Serial.print(cornerDeg[0]);Serial.print(cornerDeg[1]); Serial.print(cornerDeg[2]); Serial.println(cornerDeg[3]); 
  
 }
-  
