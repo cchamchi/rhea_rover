@@ -11,7 +11,7 @@
 #include "Arduino.h"
 
 
-rover_PM2_5::rover_PM2_5(int Vo, int V_LED){
+rover_PM2_5::PM2_5(int Vo, int V_LED){
   _Vo=Vo;
   _V_LED=V_LED;
   

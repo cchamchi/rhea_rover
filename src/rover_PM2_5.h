@@ -3,7 +3,7 @@
 
 class rover_PM2_5{
   public:
-    rover_PM2_5(int Vo, int V_LED);
+    PM2_5(int Vo, int V_LED);
     void PM2_5loop();
 
   
