@@ -11,7 +11,7 @@
 // Lx16A : 6,7
 
 int joy_velocity=0,joy_raduis=0;
-
+int v=0;
 void setup() {
 
   
@@ -19,19 +19,24 @@ void setup() {
   Serial.begin(9600);
   //setupRoverGps();
   //setupRoverAhrs();
-   //setupRoverMotor();
-  setupJoystick();
+  Serial.println("Setup Start!");
+  setupRoverMotor();
+  Serial.println("Setup Complete!");
+  //setupJoystick();
+  
 }
 
 void loop() {
   //loopRoverAhrs();
   //loopRoverGps(); 
-   loopJoystick();
+   //loopJoystick();
   // put your setup code here, to run once:
   
   //setupRoverGps();
   //loopUltraSonicTest();
-  //RoverMotorTest();
+  Serial.println("Loop Start");
+  RoverMotorTest();
+  Serial.println("Loop Passed");
   //Serial.println("dd");
   
   
