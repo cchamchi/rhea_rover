@@ -11,14 +11,19 @@
 #include "Arduino.h"
 
 
-roverPM25::roverPM25(int Vo, int V_LED){
+rover_PM2_5::rover_PM2_5(int Vo, int V_LED){
   _Vo=Vo;
   _V_LED=V_LED;
   
   pinMode(_V_LED,OUTPUT);
   pinMode(_Vo,INPUT);
 }
-void rover_PM2_5::rover_PM2_5loop(){
+rover_PM2_5::rover_PM2_5(int Vo){
+  _Vo=Vo;
+  pinMode(_Vo,INPUT);
+}
+
+void rover_PM2_5::calulatePM2_5(float _dustDensity){
   digitalWrite(_V_LED,LOW);
   delayMicroseconds(280);
   Vo_value =analogRead(_Vo);
@@ -26,34 +31,7 @@ void rover_PM2_5::rover_PM2_5loop(){
   digitalWrite(_V_LED,HIGH);
   delayMicroseconds(9680);
   voltage = Vo_value*5.0/1024.0;
-  dustDensity = (voltage-0.3)/0.005;
-  if(dustDensity<0){
-    Serial.println("Waiting...");
-  }
-  if(dustDensity<30){
-    Serial.println("What a NICE Air!");
-    Serial.print("Density: ");
-    Serial.print(dustDensity);
-    Serial.println("μm/m^3");
-  }
-  else if(dustDensity<80){
-    Serial.println("It's GOOD.");
-    Serial.print("Density: ");
-    Serial.print(dustDensity);
-    Serial.println("μm/m^3");
-  }
-  else if(dustDensity<150){
-    Serial.println("It's pretty BAD. Please keep your child from going out.");
-    Serial.print("Density: ");
-    Serial.print(dustDensity);
-    Serial.println("μm/m^3");
-  }
-  else{
-    Serial.println("DO NEVER GO OUT!");
-    Serial.print("Density: ");
-    Serial.print(dustDensity);
-    Serial.println("μm/m^3");
-  }  
-  
-  delay(1000);
+  _dustDensity = (voltage-0.3)/0.005;
+
+  return _dustDensity;
 }

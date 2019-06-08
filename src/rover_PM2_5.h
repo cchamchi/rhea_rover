@@ -1,18 +1,20 @@
-#ifndef roverPM25_H
-#define roverPM25_H
+#ifndef rover_PM2_5_H
+#define rover_PM2_5_H
 
-class roverPM25{
+class rover_PM2_5{
   public:
-    roverPM25(int Vo, int V_LED);
-    void rover_PM2_5loop();
+    rover_PM2_5(int Vo, int V_LED);
+    rover_PM2_5(int Vo);
+    void calulatePM2_5(float _dustDensity);
+    float Vo_value = 0;
+    float voltage = 0;
+    float _dustDensity = 0;
 
   
   
   
   private:
-    float Vo_value = 0;
-    float voltage = 0;
-    float dustDensity = 0;
+
 
 
     int _Vo;
