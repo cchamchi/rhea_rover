@@ -5,6 +5,7 @@
 #include "src/rover_Lx16A.h"
 #include "src/rover_motor.h"
 #include "src/rover_PM2_5.h"
+
 /* software serial pin map */
 // GPS : 10,11
 // BLE : 4,5
@@ -19,9 +20,9 @@ void setup() {
   Serial.begin(9600);
   //setupRoverGps();
   //setupRoverAhrs();
-  //Serial.println("Setup Start!");
-  //setupRoverMotor();
- // Serial.println("Setup Complete!");
+  Serial.println("Setup Start!");
+  setupRoverMotor();
+  Serial.println("Setup Complete!");
   //setupJoystick();
   
 }
@@ -34,11 +35,12 @@ void loop() {
   
   //setupRoverGps();
   //loopUltraSonicTest();
-  //Serial.println("Loop Start");
-  //RoverMotorTest();
-  //Serial.println("Loop Passed");
+  Serial.println("Loop Start");
+  RoverMotorTest();
+  Serial.println("Loop Passed");
   //Serial.println("dd");
- 
+  void loopRoverPM2_5() //delay 1000 is included in this code
+  
   //Serial.println("Rover GPS test");
 
 //      if (Serial.available()) {

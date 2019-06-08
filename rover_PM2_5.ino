@@ -31,5 +31,5 @@ void loopRoverPM2_5(){
     Serial.print(dustDensity);
     Serial.println("μm/m^3");
   }  
-//delay(1000);
+  delay(1000);
 }
