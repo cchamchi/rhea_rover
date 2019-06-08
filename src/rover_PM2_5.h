@@ -1,9 +1,9 @@
-#ifndef rover_PM2_5_H
-#define rover_PM2_5_H
+#ifndef roverPM25_H
+#define roverPM25_H
 
-class rover_PM2_5{
+class roverPM25{
   public:
-    PM2_5(int Vo, int V_LED);
+    roverPM25(int Vo, int V_LED);
     void rover_PM2_5loop();
 
   
