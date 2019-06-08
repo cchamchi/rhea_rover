@@ -19,11 +19,11 @@ rover_PM2_5::PM2_5(int Vo, int V_LED){
   pinMode(_Vo,INPUT);
 }
 void rover_PM2_5::rover_PM2_5loop(){
-  digitalWrite(V_LED,LOW);
+  digitalWrite(_V_LED,LOW);
   delayMicroseconds(280);
-  Vo_value =analogRead(Vo);
+  Vo_value =analogRead(_Vo);
   delayMicroseconds(40);
-  digitalWrite(V_LED,HIGH);
+  digitalWrite(_V_LED,HIGH);
   delayMicroseconds(9680);
   voltage = Vo_value*5.0/1024.0;
   dustDensity = (voltage-0.3)/0.005;
