@@ -23,10 +23,9 @@ class RoverMotor :public RoverLx16A {
         void getCornerDegree(float *corner_degree);
         float approxTurningRadius(float *corner_degree);
         void calculateVelocity(int vel_joy,float radius,float *velocity_wheel);
-        void sendCommand(float *velocity_wheel,float *corner_degree);
         void calculateTargetDeg(int radius_joy,float *target_degree );        
         void cornerPosControl(float *target_degree);
-
+        void wheelVelocityControl(float *velocity_wheel);
         void begin(int baudrate){
             beginLx16(stream);
             stream.begin(baudrate);
