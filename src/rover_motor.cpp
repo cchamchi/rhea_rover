@@ -35,6 +35,9 @@
 
 #define SERVO_NEUTRAL 500  // servo 0~1000 is 0~240deg.   500 is 120 deg  
 
+#define DEG2SERVO(deg) deg/0.24
+#define SERV2DEG(servo) servo*0.24
+
 /****    ID descriptions **************/
 //
 //      ID1,ID11 |-d1-|       ID4,ID44
@@ -55,13 +58,13 @@ void RoverMotor::getCornerDegree(float *corner_degree){
  
     int pos_value;
     pos_value=ReadPosition(FRTSTEER_LEFT_ID)-(SERVO_NEUTRAL-FRTSTEER_LEFT_OFFSET);
-    corner_degree[0]=pos_value*0.24;
+    corner_degree[0]=SERV2DEG(pos_value);
     pos_value=ReadPosition(RERSTEER_LEFT_ID)-(SERVO_NEUTRAL-RERSTEER_LEFT_OFFSET);
-    corner_degree[1]=pos_value*0.24;
+    corner_degree[1]=SERV2DEG(pos_value);
     pos_value=ReadPosition(FRTSTEER_RIGHT_ID)-(SERVO_NEUTRAL-FRTSTEER_RIGHT_OFFSET);
-    corner_degree[2]=pos_value*0.24;
+    corner_degree[2]=SERV2DEG(pos_value);
     pos_value=ReadPosition(RERSTEER_RIGHT_ID)-(SERVO_NEUTRAL-RERSTEER_RIGHT_OFFSET);
-    corner_degree[3]=pos_value*0.24;
+    corner_degree[3]=SERV2DEG(pos_value);
     
 }
 float RoverMotor::approxTurningRadius(float *corner_degree){
@@ -189,10 +192,10 @@ void RoverMotor::calculateTargetDeg(int radius_joy,float *wh_angle ){
 
 void RoverMotor::cornerPosControl(float *target_degree){
  // Move position sequentially to avoid a current peak
-  Move(FRTSTEER_LEFT_ID,SERVO_NEUTRAL-FRTSTEER_LEFT_OFFSET+target_degree[0],100);
-  Move(RERSTEER_LEFT_ID,SERVO_NEUTRAL-RERSTEER_LEFT_OFFSET+target_degree[1],200);
-  Move(FRTSTEER_RIGHT_ID,SERVO_NEUTRAL-FRTSTEER_RIGHT_OFFSET+target_degree[2],300);
-  Move(RERSTEER_RIGHT_ID,SERVO_NEUTRAL-RERSTEER_RIGHT_OFFSET+target_degree[3],400);
+  Move(FRTSTEER_LEFT_ID,SERVO_NEUTRAL-FRTSTEER_LEFT_OFFSET+DEG2SERVO(target_degree[0]),100);
+  Move(RERSTEER_LEFT_ID,SERVO_NEUTRAL-RERSTEER_LEFT_OFFSET+DEG2SERVO(target_degree[1]),200);
+  Move(FRTSTEER_RIGHT_ID,SERVO_NEUTRAL-FRTSTEER_RIGHT_OFFSET+DEG2SERVO(target_degree[2]),300);
+  Move(RERSTEER_RIGHT_ID,SERVO_NEUTRAL-RERSTEER_RIGHT_OFFSET+DEG2SERVO(target_degree[3]),400);
  
 }
 
