@@ -50,9 +50,6 @@
 
 //#define LOBOT_DEBUG 1  /*Debug ：print debug value*/
 
-
-
-
 class RoverLx16A{
     public:
         RoverLx16A()

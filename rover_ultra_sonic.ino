@@ -1,4 +1,3 @@
-
 unsigned long distance_cm;
 RoverUltraSonic sonicpin(13,12); // (trig, echo)
 void setupUltraSonic(){ 

@@ -1,24 +1,32 @@
 #define J_MIN 0
 #define J_MAX 100
 #define J_STEP 25
-SoftwareSerial bleJoystick(5,6);
 
-//https://kocoafab.cc/tutorial/view/532
+
+SoftwareSerial bleJoystick(4,5);
 
 void setupJoystick(){
   bleJoystick.begin(9600);
-  
+  //Serial.println("test start");
+
 }
 
 void loopJoystick(){
 
+ 
   if(bleJoystick.available()){
-    char data= bleJoystick.read();
+        
+   char data= bleJoystick.read();
+   //Serial.print("data; ");
+   //Serial.write(data);
+   //Serial.print(" ");
+    
+   
     switch(data){
       case 'A':  //ON
 
         break;
-
+  
       case 'B':  //OFF
         break;
       case 'C':  // C~K left/right
@@ -27,7 +35,7 @@ void loopJoystick(){
       case 'D':
         joy_raduis=-(J_MIN+3*J_STEP);
         break;
-      case 'E':
+     case 'E':
         joy_raduis=-(J_MIN+2*J_STEP);
         break;
       case 'F':
@@ -45,13 +53,13 @@ void loopJoystick(){
       case 'J':
         joy_raduis=(J_MIN+3*J_STEP);
         break;
-      case 'k':
+      case 'K':
         joy_raduis=J_MAX;
         break;
-
+  
       case 'L':  // L~T foward/backward
-        joy_velocity=-J_MAX;
-        break;
+       joy_velocity=-J_MAX;
+       break;
       case 'M':
         joy_velocity=-(J_MIN+3*J_STEP);
         break;
@@ -76,12 +84,23 @@ void loopJoystick(){
       case 'T':
         joy_velocity=J_MAX;
         break;
-
-                      
-    }//end switch case
+      default :
+        return;
+         
+      
+        
+      }//end switch case
 
     // send velocity and radius to Lx16A
     sendcommand(joy_velocity,joy_raduis);
+      
+    Serial.print("V:");
+    Serial.print(joy_velocity);
+
+    Serial.print("   R:");
+    Serial.println(joy_raduis);
+    
   }
   
+
 }
