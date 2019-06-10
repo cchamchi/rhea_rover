@@ -340,3 +340,135 @@ int RoverLx16A::ReadVin(uint8_t id){
     #endif
     return ret;
 }
+
+
+void RoverLx16A::LedCTRL(uint8_t ID, uint8_t onoff){
+    byte buf[7];
+    buf[0] = buf[1] = LOBOT_SERVO_FRAME_HEADER;
+    buf[2] = ID;
+    buf[3] = 4;
+    buf[4] = LOBOT_SERVO_LED_CTRL_WRITE;
+    buf[5] = onoff;
+    buf[6] = LobotCheckSum(buf);
+    SerialX->write(buf, 7);
+    
+    #ifdef LOBOT_DEBUG
+    Serial.println("LOBOT SERVO LED Control");
+    int debug_value_i = 0;
+    for (debug_value_i = 0; debug_value_i < buf[3] + 3; debug_value_i++)
+    {
+        Serial.print(buf[debug_value_i], HEX);
+        Serial.print(":");
+    }
+    Serial.println(" ");
+    #endif
+}
+
+
+int RoverLx16A::ReadTemp(uint8_t id){
+    int count = 10000;
+    int ret;
+    byte buf[6];
+
+    buf[0] = buf[1] = LOBOT_SERVO_FRAME_HEADER;
+    buf[2] = id;
+    buf[3] = 3;
+    buf[4] = LOBOT_SERVO_TEMP_READ;
+    buf[5] = LobotCheckSum(buf);
+
+    #ifdef LOBOT_DEBUG
+    Serial.println("LOBOT SERVO TEMP READ");
+    int debug_value_i = 0;
+    for (debug_value_i = 0; debug_value_i < buf[3] + 3; debug_value_i++)
+    {
+        Serial.print(buf[debug_value_i], HEX);
+        Serial.print(":");
+    }
+    Serial.println(" ");
+    #endif
+
+    while (SerialX->available())
+        SerialX->read();
+
+    SerialX->write(buf, 6);
+
+    while (!SerialX->available()) {
+        count -= 1;
+        if (count < 0)
+        return -2048;
+    }
+
+    if (LobotSerialServoReceiveHandle(buf) > 0)
+        ret = (int16_t)BYTE_TO_HW(buf[2], buf[1]);
+    else
+        ret = -2048;
+
+    #ifdef LOBOT_DEBUG
+    Serial.println(ret);
+    #endif
+    return ret;
+}
+
+void RoverLx16A::OffsetAdjust(uint8_t id, int16_t offsetpos){
+    byte buf[7];
+    buf[0] = buf[1] = LOBOT_SERVO_FRAME_HEADER;
+    buf[2] = id;
+    buf[3] = 4;
+    buf[4] = LOBOT_SERVO_ANGLE_OFFSET_ADJUST;
+    buf[5] = offsetpos;
+    buf[6] = LobotCheckSum(buf);
+    SerialX->write(buf, 7);
+    
+    #ifdef LOBOT_DEBUG
+    Serial.println("LOBOT SERVO ANGLE OFFSET ADJUST");
+    int debug_value_i = 0;
+    for (debug_value_i = 0; debug_value_i < buf[3] + 3; debug_value_i++)
+    {
+        Serial.print(buf[debug_value_i], HEX);
+        Serial.print(":");
+    }
+    Serial.println(" ");
+    #endif
+}
+void RoverLx16A::Offsetwrite(uint8_t id, int16_t offsetpos){
+    byte buf[7];
+    buf[0] = buf[1] = LOBOT_SERVO_FRAME_HEADER;
+    buf[2] = id;
+    buf[3] = 4;
+    buf[4] = LOBOT_SERVO_ANGLE_OFFSET_WRITE;
+    buf[5] = offsetpos;
+    buf[6] = LobotCheckSum(buf);
+    SerialX->write(buf, 7);
+    
+    #ifdef LOBOT_DEBUG
+    Serial.println("LOBOT_SERVO_ANGLE_OFFSET_WRITE");
+    int debug_value_i = 0;
+    for (debug_value_i = 0; debug_value_i < buf[3] + 3; debug_value_i++)
+    {
+        Serial.print(buf[debug_value_i], HEX);
+        Serial.print(":");
+    }
+    Serial.println(" ");
+    #endif
+}
+void RoverLx16A::OffsetRead(uint8_t id){
+    byte buf[6];
+    buf[0] = buf[1] = LOBOT_SERVO_FRAME_HEADER;
+    buf[2] = id;
+    buf[3] = 4;
+    buf[4] = LOBOT_SERVO_ANGLE_OFFSET_READ;
+    buf[5] = LobotCheckSum(buf);
+    SerialX->write(buf, 6);
+    
+    #ifdef LOBOT_DEBUG
+    Serial.println("LOBOT_SERVO_ANGLE_OFFSET_READ");
+    int debug_value_i = 0;
+    for (debug_value_i = 0; debug_value_i < buf[3] + 3; debug_value_i++)
+    {
+        Serial.print(buf[debug_value_i], HEX);
+        Serial.print(":");
+    }
+    Serial.println(" ");
+    #endif
+
+}

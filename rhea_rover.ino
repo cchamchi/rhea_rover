@@ -39,7 +39,7 @@ void loop() {
   RoverMotorTest();
   Serial.println("Loop Passed");
   //Serial.println("dd");
-  void loopRoverPM2_5() //delay 1000 is included in this code
+  loopRoverPM2_5(); //delay 1000 is included in this code
   
   //Serial.println("Rover GPS test");
 
