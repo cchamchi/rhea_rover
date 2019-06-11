@@ -2,6 +2,7 @@ RoverPM2_5 roverPM2_5(A1,3);
 float dustDensity;
 
 void setupRoverPM2_5(){
+  Serial.println(F("Start PM2.5 sensor at A1,3 "));
   roverPM2_5.begin();
 }
 
