@@ -1,4 +1,5 @@
 {
     "board": "arduino:avr:uno",
-    "port": "/dev/cu.wchusbserial14310"
+    "port": "/dev/cu.wchusbserial14310",
+    "sketch": "rhea_rover.ino"
 }
