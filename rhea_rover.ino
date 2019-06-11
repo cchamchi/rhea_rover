@@ -31,6 +31,7 @@ void setup() {
   
   //Serial.begin(38400);     //MPU6050 default
   Serial.begin(9600);
+  pirintLogo();  
   //setupRoverGps();
   //setupRoverAhrs();
   Serial.println("Setup Start!");
@@ -69,5 +70,16 @@ void loop() {
 //      if (Serial.available()) {
 //        Serial.write(Serial.read());
 //      }
+
+}
+
+void pirintLogo(){
+
+  Serial.println("************************************************");
+  Serial.println("*    Rhea Rover                                *");
+  Serial.println("*    SeungMin Shin, Haneulbit Kim, Chan Lee    *");
+  Serial.println("*                  powered by Asgardia 2019    *");  
+  Serial.println("*      https://github.com/cchamchi/rhea_rover  *");
+  Serial.println("************************************************");
 
 }
