@@ -8,13 +8,13 @@
 #include "src/rover_motor.h"
 #include "src/rover_PM2_5.h"
 #include "src/rover_SD.h"
-
+#include "src/rover_MQ7.h"
 /* software serial pin map */
 // GPS : 9,10
 // BLE : 4,5
 // Lx16A : 6,7
 // SD : 13,12,11,10
-// MQ7 : 
+// MQ7 carbon Monoxide:  A0
 // UltraSonic : 
 // PM2.5 : 
 // RF communication :
@@ -24,6 +24,7 @@ int v=0;
 
 CmdMessenger cmdMessenger = CmdMessenger(Serial);
 RoverSD roverSd;
+RoverMQ7 roverMQ7(A0,5.0);
 
 void setup() {
 
@@ -54,6 +55,9 @@ void loop() {
   
   //setupRoverGps();
   //loopUltraSonicTest();
+  //read carbon monoxide value
+  //Serial.println(roverMQ7.getPPM());
+
   Serial.println("Loop Start");
   RoverMotorTest();
   Serial.println("Loop Passed");
