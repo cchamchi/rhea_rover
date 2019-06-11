@@ -1,23 +1,19 @@
 unsigned long distance_cm;
-RoverUltraSonic sonicpin(13,12); // (trig, echo)
+RoverUltraSonic roverUltraSonic(8,9); // (trig, echo)
 void setupUltraSonic(){ 
-
+  Serial.println(F("Start UltraSonic sensor at  8 trig,9 echo "));
+  roverUltraSonic.begin();
 }
 float distance;
 
-void loopUltraSonic(){ 
+void updateUltraSonic(){ 
    //measure the distance
-  distance=sonicpin.measureDistance();
-  
-  sonicpin.isDistanceInArea(20,1);
-   //is Distance in Area??
-
-   // Do someting
+  distance=roverUltraSonic.measureDistance();
 
 }
 
 void loopUltraSonicTest(){
-  distance=sonicpin.measureDistance();
+  distance=roverUltraSonic.measureDistance();
     // //measure the distance);
   Serial.println(distance);
     // print distance

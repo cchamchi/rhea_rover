@@ -14,11 +14,15 @@
 
 RoverUltraSonic::RoverUltraSonic(int trigPin, int echoPin)
 {
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
   _trigPin = trigPin;
   _echoPin = echoPin;
 }
+void RoverUltraSonic::begin(){
+
+  pinMode(_trigPin, OUTPUT);
+  pinMode(_echoPin, INPUT);
+}
+
 
 float RoverUltraSonic::measureDistance()
 {
