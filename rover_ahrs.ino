@@ -9,6 +9,6 @@ void setupRoverAhrs() {
 }
 
 void updateRoverAhrs() {
-    roverAhrs.update();
+    roverAhrs.update(1);
 
 }
