@@ -48,15 +48,15 @@ struct AcceleroInfo {
 };
 
 
-class RoverAhrs
-{
+class RoverAhrs : public MPU6050 {
   public:
-
-    void readAhrsData();
-    void testreadAhrsData();
-    bool isAhrsDataReady();
-    void ahrsBegin();
-    void rx_empty();
+    RoverAhrs():MPU6050(),roll(0),pitch(0),yaw(0),ax(0),ay(0),az(0)
+    {}
+ 
+    void begin();
+    void update();
+    void caculrateMotionAcceleration();
+    bool isAhrsDataNew();
 
     int16_t roll;
     int16_t pitch;
@@ -64,25 +64,10 @@ class RoverAhrs
     int16_t ax;
     int16_t ay;
     int16_t az;
-    
-    MPU6050 accelgyro;
-
-    void begin();
-    void update();
-    void testupdate();
-    GyroInfo getGyro();
-    AcceleroInfo getAccelero();
-    float getMotionAcceleration();
-    void caculrateMotionAcceleration();
-
-    bool isAhrsDataNew();
-    void printAhrsInfo();
+    float motion_acceleration;
 
   private:    
-    float _sbuf[6];
-
     bool _ahrs_data_flag;
-    float _motion_acceleration;
     int _print_count;
 };
 

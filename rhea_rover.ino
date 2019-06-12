@@ -10,15 +10,16 @@
 #include "src/rover_MQ7.h"
 #include "src/rover_sht.h"
 /* software serial pin map */
-// GPS : 9,10
+// GPS : 8,9
 // BLE : 4,5
 // Lx16A : 6,7
 // SD : 13,12,11,10
 // MQ7 carbon Monoxide:  A0
-// UltraSonic : 8,9
+// UltraSonic : 4,5     // BLE or UltraSonic
 // PM2.5 :  A1, 3
 // RF communication :
-//SHT3x : I2C 0x45
+//  SHT3x : I2C 0x45
+// MPU6050 : I2C 0x68 
 
 int joy_velocity=0,joy_raduis=0;
 int v=0;

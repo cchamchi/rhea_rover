@@ -1,4 +1,4 @@
-SoftwareSerial _GPSport(9,10);
+SoftwareSerial _GPSport(8,9);
 
 RoverGPS<SoftwareSerial> roverGPS(_GPSport);
 
@@ -6,7 +6,7 @@ void setupRoverGps(){
 
   // Causion!! When using a Software serial, 
   // must use 9600 baud rate, cause a Software read speed is too late
-  Serial.println(F("Start GPS at SoftwareSerial 9,10 "));
+  Serial.println(F("Start GPS at SoftwareSerial 8,9 "));
   roverGPS.begin(9600);
 }
 

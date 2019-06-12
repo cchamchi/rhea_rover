@@ -4,19 +4,11 @@
 RoverAhrs roverAhrs;
 
 void setupRoverAhrs() {
+    Serial.println(F("Start MPU6050"));    
     roverAhrs.begin();
-    // initialize device
-    Serial.println("Initializing I2C devices...");
-    roverAhrs.accelgyro.initialize();
-
-    // verify connection
-    Serial.println("Testing device connections...");
-    Serial.println(roverAhrs.accelgyro.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
 }
 
-void loopRoverAhrs() {
+void updateRoverAhrs() {
     roverAhrs.update();
-    roverAhrs.printAhrsInfo();
-    //Serial.print("ax=");
-    //Serial.println(roverAhrs.ax);
+
 }
