@@ -9,6 +9,6 @@ void setupRoverAhrs() {
 }
 
 void updateRoverAhrs() {
-    roverAhrs.update(1);
+    roverAhrs.update(COMP_FILTER);
 
 }
