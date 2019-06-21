@@ -24,6 +24,7 @@ Constructor to initialize the analog pin and input voltage to MQ7
 RoverMQ7::RoverMQ7(uint8_t pin, float v_input){
   analogPin = pin;
   v_in = v_input;
+  co_ppm=0;
 }
 
 /*
@@ -31,8 +32,8 @@ Function is used to return the ppm value of CO gas concentration
 by using the parameter found using the function f(x) = a * ((Rs/R0) ^ b)
 @return ppm value of Carbon Monoxide concentration
 */
-float RoverMQ7::getPPM(){
-  return (float)(coefficient_A * pow(getRatio(), coefficient_B));
+void RoverMQ7::getPPM(){
+  co_ppm=(float)(coefficient_A * pow(getRatio(), coefficient_B));
 }
 
 /*

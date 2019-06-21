@@ -35,11 +35,13 @@ class RoverMQ7 {
 		uint8_t analogPin;
 		float v_in;
 		float voltageConversion(int);
+		
 	public:
 		RoverMQ7(uint8_t, float);
-		float getPPM();
+		void getPPM();
 		float getSensorResistance();
 		float getRatio();
+		float co_ppm;
 };
 
 #endif

@@ -1,13 +1,14 @@
 unsigned long distance_cm;
 RoverUltraSonic roverUltraSonic(4,5); // (trig, echo)
 void setupUltraSonic(){ 
-  Serial.println(F("Start UltraSonic sensor at  4 trig,5 echo "));
+  ROVER_LOG("Setup UltraSonic 4trig,5echo ");
   roverUltraSonic.begin();
 }
 float distance;
 
 void updateUltraSonic(){ 
    //measure the distance
+   ROVER_LOG("update Ultra");
   distance=roverUltraSonic.measureDistance();
 
 }

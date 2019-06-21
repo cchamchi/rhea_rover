@@ -8,14 +8,16 @@
 */
 
 #include "rover_PM2_5.h"
+#include "rover_debug.h"
 #include "Arduino.h"
 
 
 RoverPM2_5::RoverPM2_5(int Vo, int V_LED){
   _Vo=Vo;
   _V_LED=V_LED;
-  _dustDensity = 0;
+  dustDensity = 0;
   _last_millis=0;
+  _prev_dustDensity=0;
 }
 void RoverPM2_5::begin(){
   pinMode(_V_LED,OUTPUT);
@@ -23,7 +25,7 @@ void RoverPM2_5::begin(){
 float RoverPM2_5::calulatePM2_5(){
   float Vo_value,voltage;
   long current_millis=millis();
-  if((_last_millis-current_millis) > SLEEP_TIME ){
+  if((current_millis-_last_millis) < SLEEP_TIME ){
     _last_millis=current_millis;
     digitalWrite(_V_LED,LOW);  //power on LED
     delayMicroseconds(SAMPLING_TIME);
@@ -37,13 +39,21 @@ float RoverPM2_5::calulatePM2_5(){
     voltage = Vo_value*(5.0/1024.0);  // 0 - 5V mapped to 0 - 1023 integer values
     // linear eqaution taken from http://www.howmuchsnow.com/arduino/airquality/
     // Chris Nafis (c) 2012
-    //_dustDensity = (voltage-0.3)/0.005;// where are you from?
-    _dustDensity = 0.17 * voltage - 0.1;
+    // dustDensity = 0.172 * voltage - 0.0999;  //mg/m^3
+    // 
+    //https://m.blog.naver.com/PostView.nhn?blogId=iamamaker&logNo=221126455583&proxyReferer=https%3A%2F%2Fwww.google.com%2F
+    //Serial.println(voltage);
+    if(voltage<VOC)voltage=VOC; //To avoid minus
+    dustDensity = (voltage - VOC)/K_SEN;  //ug/m^3
+  
+    //smooting filter
+    dustDensity=0.9*_prev_dustDensity+0.1*dustDensity;
+    _prev_dustDensity=dustDensity;
 
-    return _dustDensity;
+    return dustDensity;
   }else{
-    Serial.println(F("update need at least 1second "));
-    _last_millis=current_millis;
+    ROVER_LOG("PM2.5 update need at least 1second ");
     return(-1);
   }
+  _last_millis=current_millis;
 }

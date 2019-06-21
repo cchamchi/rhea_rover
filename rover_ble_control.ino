@@ -6,13 +6,15 @@
 SoftwareSerial bleJoystick(4,5);
 
 void setupJoystick(){
+  ROVER_LOG("Setup BLE joystick"); 
   bleJoystick.begin(9600);
   //Serial.println("test start");
 
+
 }
 
-void loopJoystick(){
-
+void updateJoystick(){
+  //ROVER_LOG("update Joystick");
  
   if(bleJoystick.available()){
         
@@ -90,6 +92,9 @@ void loopJoystick(){
       
         
       }//end switch case
+
+    // 
+    joy_velocity=-joy_velocity;
 
     // send velocity and radius to Lx16A
     sendcommand(joy_velocity,joy_raduis);

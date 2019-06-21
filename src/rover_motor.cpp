@@ -28,15 +28,19 @@
 #define FRTSTEER_RIGHT_ID 44
 #define RERSTEER_RIGHT_ID 66
 
-#define FRTSTEER_LEFT_OFFSET -10
+#define FRTSTEER_LEFT_OFFSET 10
 #define RERSTEER_LEFT_OFFSET 10
-#define FRTSTEER_RIGHT_OFFSET -40
-#define RERSTEER_RIGHT_OFFSET 60
+#define FRTSTEER_RIGHT_OFFSET 0 //-40
+#define RERSTEER_RIGHT_OFFSET -10//60
 
 #define SERVO_NEUTRAL 500  // servo 0~1000 is 0~240deg.   500 is 120 deg  
 
+#define S_GAP 5 //5ms
+#define MSPERDEG   10.0//ms per deg
+
 #define DEG2SERVO(deg) deg/0.24
 #define SERV2DEG(servo) servo*0.24
+#define DEG2TIME 1000
 
 /****    ID descriptions **************/
 //
@@ -180,22 +184,30 @@ void RoverMotor::calculateTargetDeg(int radius_joy,float *wh_angle ){
   int ang4 = int(degrees(atan(d2/(abs(r)-d1))));
 
   if (radius_joy > 0){
-    wh_angle[0]=ang1; wh_angle[1]=-ang2;
-    wh_angle[2]=ang3; wh_angle[3]=-ang4;
+    wh_angle[0]=ang1; wh_angle[2]=ang3;
+    wh_angle[1]=-ang2; wh_angle[3]=-ang4;
+     
   }else{
-    wh_angle[0]=-ang1; wh_angle[1]=ang2;
-    wh_angle[2]=-ang3; wh_angle[3]=ang4;
+    wh_angle[0]=-ang3; wh_angle[2]=-ang1;
+    wh_angle[1]=ang4; wh_angle[3]=ang2;
+     
   }
   
+  
+  Serial.print(wh_angle[0]);Serial.print(",");
+  Serial.print(wh_angle[1]);Serial.print(",");
+  Serial.print(wh_angle[2]);Serial.print(",");
+  Serial.println(wh_angle[3]);
 
 }
 
+
 void RoverMotor::cornerPosControl(float *target_degree){
  // Move position sequentially to avoid a current peak
-  Move(FRTSTEER_LEFT_ID,SERVO_NEUTRAL-FRTSTEER_LEFT_OFFSET+DEG2SERVO(target_degree[0]),100);
-  Move(RERSTEER_LEFT_ID,SERVO_NEUTRAL-RERSTEER_LEFT_OFFSET+DEG2SERVO(target_degree[1]),200);
-  Move(FRTSTEER_RIGHT_ID,SERVO_NEUTRAL-FRTSTEER_RIGHT_OFFSET+DEG2SERVO(target_degree[2]),300);
-  Move(RERSTEER_RIGHT_ID,SERVO_NEUTRAL-RERSTEER_RIGHT_OFFSET+DEG2SERVO(target_degree[3]),400);
+  Move(FRTSTEER_LEFT_ID,SERVO_NEUTRAL-FRTSTEER_LEFT_OFFSET+DEG2SERVO(target_degree[0]),DEG2TIME);
+  Move(RERSTEER_LEFT_ID,SERVO_NEUTRAL-RERSTEER_LEFT_OFFSET+DEG2SERVO(target_degree[1]),DEG2TIME);
+  Move(FRTSTEER_RIGHT_ID,SERVO_NEUTRAL-FRTSTEER_RIGHT_OFFSET+DEG2SERVO(target_degree[2]),DEG2TIME);
+  Move(RERSTEER_RIGHT_ID,SERVO_NEUTRAL-RERSTEER_RIGHT_OFFSET+DEG2SERVO(target_degree[3]),DEG2TIME);
  
 }
 
@@ -204,12 +216,14 @@ void RoverMotor::wheelVelocityControl(float *velocity_wheel,float speed_ratio){
     // wheel ID : 1~6
     int wh_vel[6];
     for(int i=0;i<3;i++){
-      wh_vel[i]=-(int)map(velocity_wheel[i],-100,100,-1000*speed_ratio,1000*speed_ratio);
-      SetMode(i+1,1,wh_vel[i]);
-    }
-    for(int i=3;i<6;i++){
       wh_vel[i]=(int)map(velocity_wheel[i],-100,100,-1000*speed_ratio,1000*speed_ratio);
       SetMode(i+1,1,wh_vel[i]);
+      delay(S_GAP); // to avoid a current peak
+    }
+    for(int i=3;i<6;i++){
+      wh_vel[i]=-(int)map(velocity_wheel[i],-100,100,-1000*speed_ratio,1000*speed_ratio);
+      SetMode(i+1,1,wh_vel[i]);
+      delay(S_GAP); // to avoid a current peak
     }
 
 

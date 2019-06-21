@@ -3,9 +3,9 @@ enum
 {
   kAcknowledge, //0
   kError, //1
-  kHomePosition, //
-  kDirivingMode, //
-  kManualControl, //
+  kHomePosition, //2
+  kDirivingMode, //3
+  kManualControl, //4
   
 };
 
@@ -61,6 +61,7 @@ void OnDrivingMode(){
 //        tskNavigation.setNavigationMode(0);
 //     }    
      cmdMessenger.sendCmd(kAcknowledge,F("Driving:auto"));
+     ROVER_LOG("Driving:auto");
 
    }
    if(trigger==1){ //manual mode
@@ -70,22 +71,26 @@ void OnDrivingMode(){
 //        tskNavigation.setNavigationMode(1);
 //     }    
      cmdMessenger.sendCmd(kAcknowledge,F("Driving:manual"));
+     ROVER_LOG("Driving:manual");
    }  
 }
 
+extern int velocity,radius;
 
 void OnManualControl(){
   // Read led state argument, 
-  int trigger;
+  
 //   if(!tskNavigation.getNavigationMode()){
 //     cmdMessenger.sendCmd(kAcknowledge,F("Control fail..Set manualmode first!!!")); 
 //     return;  
 //   }
 
-  trigger = cmdMessenger.readInt16Arg();
-  
-  cmdMessenger.sendCmd(kAcknowledge,"manual Contol Ok"); 
+  velocity = cmdMessenger.readInt16Arg();
+  radius = cmdMessenger.readInt16Arg();
 
+  //ROVER_LOG2(velocity,radius);
+  cmdMessenger.sendCmd(kAcknowledge,F("ManualCmd ")); 
+    // send velocity and radius to Lx16A
   
 }
 

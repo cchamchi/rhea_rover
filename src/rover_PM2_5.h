@@ -22,17 +22,21 @@
 #define SAMPLING_TIME 280
 #define DELTA_TIME 40
 #define SLEEP_TIME 9680
+#define VOC 0.8 // 0~1.5 voltage at no dust 
+#define K_SEN 0.005 //  0.0035~0.0065 V/(ug/m^3) sensitivity
 class RoverPM2_5{
   public:
     RoverPM2_5(int Vo, int V_LED);
     void begin();
     float calulatePM2_5();
+    float dustDensity ;
   
   private:
-    float _dustDensity ;
+    
     int _Vo;
     int _V_LED;
     long _last_millis;
+    float _prev_dustDensity;
 
 
 };

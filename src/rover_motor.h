@@ -16,9 +16,9 @@
 class RoverMotor :public RoverLx16A {
     public:
         RoverMotor(SoftwareSerial& stream):stream(stream),RoverLx16A(){
-            float currunt_radius=0;
-            memset( corner_degree, 0, sizeof(corner_degree));
-            memset( velocity_wheel, 0, sizeof(velocity_wheel));
+            // float currunt_radius=0;
+            // memset( corner_degree, 0, sizeof(corner_degree));
+            // memset( velocity_wheel, 0, sizeof(velocity_wheel));
             }
         void getCornerDegree(float *corner_degree);
         float approxTurningRadius(float *corner_degree);
@@ -34,12 +34,13 @@ class RoverMotor :public RoverLx16A {
  
     private:
         SoftwareSerial& stream;
-        float currunt_radius;
-        float corner_degree[4];
-        float target_degree[4];
-        float velocity_wheel[6];
-        float d1=7.254,d2=10.5,d3=10.5,d4=10.073; // distance of wheel from centor
-        
+        // float currunt_radius;
+        // float corner_degree[4];
+        // float target_degree[4];
+        // float velocity_wheel[6];
+        //const float d1=7.254,d2=10.5,d3=10.5,d4=10.073; // distance of wheel from centor
+        const float d1=9.252,d2=9.843,d3=11.811,d4=10.631; // distance of wheel from centor [inches]
+        //const float d1=23.5,d2=25,d3=30,d4=27; // distance of wheel from centor [centi]
 };
 
 

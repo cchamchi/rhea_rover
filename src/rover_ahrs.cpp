@@ -37,7 +37,7 @@ THE SOFTWARE.
 ===============================================
 */
 #include "rover_ahrs.h"
-
+#include "rover_debug.h"
 
 
 bool RoverAhrs::begin()
@@ -48,6 +48,7 @@ bool RoverAhrs::begin()
   // verify connection
   //Serial.println(F("Testing device connections..."));
   //Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
+  delay(200);
   calibrate();
   _ahrs_data_flag=false;
   return testConnection();
@@ -88,14 +89,16 @@ void RoverAhrs::update(int fiters)
 
 void RoverAhrs::ComplementaryFilter(int16_t ax,int16_t ay,int16_t az,int16_t gx,int16_t gy,int16_t gz,unsigned long t_now){
 // Convert gyro values to degrees/sec
-  float gyro_x = GYRO2DEG(gx);
-  float gyro_y = GYRO2DEG(gy);
-  float gyro_z = GYRO2DEG(gz);
-
+  float gyro_x = GYRO2DEG((gx-base_gx));
+  float gyro_y = GYRO2DEG((gy-base_gy));
+  float gyro_z = GYRO2DEG((gz-base_gz));
+  // float gyro_x = GYRO2DEG(gx);
+  // float gyro_y = GYRO2DEG(gy);
+  // float gyro_z = GYRO2DEG(gz);
   // Get raw acceleration values  ... try normalized value
-  float accel_x = ax; //NORM_ACC(ax)
-  float accel_y = ay; //NORM_ACC(ay)
-  float accel_z = ax; //NORM_ACC(az)
+  float accel_x = NORM_ACC(ax);
+  float accel_y = NORM_ACC(ay);
+  float accel_z = NORM_ACC(az);
 
   // Get angle values from accelerometer
   float RADIANS_TO_DEGREES = 180/3.14159;
@@ -168,6 +171,7 @@ void RoverAhrs::calibrate() {
   // Discard the first set of values read from the IMU
   getMotion6(&raw_ax, &raw_ay, &raw_az, &raw_gx, &raw_gy, &raw_gz);
   
+  ROVER_LOG("IMU Calibration !! Don't MOVE")
   // Read and average the raw values from the IMU
   for (int i = 0; i < num_readings; i++) {
     getMotion6(&raw_ax, &raw_ay, &raw_az, &raw_gx, &raw_gy, &raw_gz);
@@ -182,10 +186,14 @@ void RoverAhrs::calibrate() {
   base_ax = x_accel; base_ay = y_accel; base_az = z_accel;
   base_gx = x_gyro; base_gy = y_gyro; base_gz = z_gyro;
 
+  // Serial.println(base_gx);
+  // Serial.println(base_gy);
+  // Serial.println(base_gz);
+  ROVER_LOG("end Calibration")
   // supply your own gyro offsets here, scaled for min sensitivity
-  // setXGyroOffset(220);
-  // setYGyroOffset(76);
-  // setZGyroOffset(-85);
-  // setZAccelOffset(1788); // 1688 factory default for my test chip 
+  //setXGyroOffset(220);
+  //setYGyroOffset(76);
+  //setZGyroOffset(-85);
+  //setZAccelOffset(1788); // 1688 factory default for my test chip 
   
 }
